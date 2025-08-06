@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCstart - Minecraft主题浏览器主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            text-shadow: none !important;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #1e3f20);
+            background-size: cover;
+            min-height: 100vh;
+            padding: 15px;
+            color: #fff;
+            position: relative;
+            transition: background 0.8s ease;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-image, url('https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80'));
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transition: background-image 1.5s ease-in-out, transform 15s ease;
+            transform: scale(1.02);
+        }
+        
+        body:hover::before {
+            transform: scale(1.05);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+            backdrop-filter: blur(2px);
+        }
+        
+        .pixel-border {
+            border: 4px solid #8B4513;
+            border-image: repeating-linear-gradient(45deg, #8B4513, #5D2906, #8B4513) 10;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.3), 0 0 15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pixel-border::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 4s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 0;
+            position: relative;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .theme-switch, .bg-refresh {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+            border: 2px solid #5D2906;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        .theme-switch:hover, .bg-refresh:hover {
+            background: rgba(50, 50, 50, 0.9);
+            transform: translateY(-3px) rotate(5deg);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .search-section {
+            text-align: center;
+            padding: 15px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Press Start 2P', monospace;
+            position: relative;
+            letter-spacing: 1px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: rgba(79, 195, 247, 0.3);
+            border-radius: 2px;
+        }
+        
+        .logo i {
+            font-size: 36px;
+            color: #4fc3f7;
+            filter: drop-shadow(0 0 5px rgba(79, 195, 247, 0.8));
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1); }
+        }
+        
+        .search-container {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid #5D2906;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-btn {
+            background: #3a9d23;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        .search-btn:hover {
+            background: #2e7d1a;
+            transform: scale(1.02);
+        }
+        
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 15px 15px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 2px solid #5D2906;
+            border-top: none;
+        }
+        
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+        
+        .suggestion-item:hover {
+            background: rgba(93, 41, 6, 0.5);
+        }
+        
+        .suggestion-item i {
+            color: #3a9d23;
+        }
+        
+        .engine-switcher {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .engine-btn {
+            background: rgba(30, 30, 30, 0.8);
+            color: white;
+            border: 2px solid #5D2906;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .engine-btn.active {
+            background: #3a9d23;
+            box-shadow: 0 0 12px rgba(58, 157, 35, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .engine-btn:hover:not(.active) {
+            background: rgba(58, 157, 35, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .launch-btn {
+            background: #e67e22;
+            color: white;
+            border: 2px solid #d35400;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .launch-btn:hover {
+            background: #d35400;
+            transform: translateY(-3px);
+        }
+        
+        .quicklinks-section {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 25px;
+            margin-top: 10px;
+            border: 2px solid #5D2906;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .quicklinks-section:hover {
+            transform: translateY(-4px);
+        }
+        
+        .quicklinks-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3a9d23, #8B4513, #3a9d23);
+        }
+        
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title h2, 
+        .game-launch-section h2,
+        .server-status-header h3 {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-family: 'Press Start 2P', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .section-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .add-btn, .edit-btn {
+            background: #3a9d23;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            font-weight: bold;
+            border: 2px solid #2e7d1a;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .edit-btn {
+            background: #8B4513;
+            border: 2px solid #5D2906;
+        }
+        
+        .add-btn:hover {
+            background: #2e7d1a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .edit-btn:hover {
+            background: #5D2906;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .edit-btn.active {
+            background: #5D2906;
+            box-shadow: 0 0 12px rgba(93, 41, 6, 0.6);
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+        }
+        
+        .link-item {
+            background: rgba(40, 40, 40, 0.85);
+            border-radius: 15px;
+            padding: 18px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: white;
+            border: 2px solid #5D2906;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .link-item:hover {
+            transform: translateY(-6px) scale(1.03);
+            background: rgba(58, 157, 35, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            border-color: #3a9d23;
+        }
+        
+        .link-item.dragging {
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+        
+        .favicon-container {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+            border: 2px solid #5D2906;
+            transition: all 0.3s;
+        }
+        
+        .link-item:hover .favicon-container {
+            transform: rotate(10deg) scale(1.1);
+            border-color: #4fc3f7;
+            box-shadow: 0 0 8px rgba(79, 195, 247, 0.6);
+        }
+        
+        .favicon-img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .link-title {
+            font-size: 14px;
+            font-weight: 500;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .link-controls {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .link-item:hover .link-controls {
+            opacity: 1;
+        }
+        
+        .edit-link-btn, .delete-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            border: 1px solid #5D2906;
+            font-size: 12px;
+        }
+        
+        .edit-link-btn:hover {
+            background: rgba(59, 130, 246, 0.7);
+            transform: scale(1.1);
+        }
+        
+        .delete-btn:hover {
+            transform: scale(1.1);
+            background: rgba(200, 0, 0, 0.7);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .modal.active {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e3f20, #2c3e50);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 18px 35px rgba(0,0,0,0.5);
+            color: #fff;
+            border: 3px solid #5D2906;
+            backdrop-filter: blur(10px);
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            animation: modalAppear 0.4s forwards;
+            margin: 20px 0;
+        }
+        
+        @keyframes modalAppear {
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #5D2906;
+        }
+        
+        .modal-header h3 {
+            font-weight: 500;
+            font-size: 22px;
+            font-family: 'Press Start 2P', monospace;
+        }
+        
+        .close-btn {
+            background: rgba(30,30,30,0.8);
+            border: 2px solid #5D2906;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(93, 41, 6, 0.8);
+            transform: rotate(90deg);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #5D2906;
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(30,30,30,0.7);
+            color: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #3a9d23;
+            outline: none;
+            box-shadow: 0 0 8px rgba(58, 157, 35, 0.5);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .submit-btn {
+            background: #3a9d23;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            margin-top: 12px;
+            border: 2px solid #2e7d1a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .submit-btn:hover {
+            background: #2e7d1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+        
+        .bg-info {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 280px;
+            text-align: right;
+            border: 2px solid #5D2906;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(10px);
+            opacity: 0;
+            animation: infoAppear 0.5s 0.5s forwards;
+            transition: all 0.3s;
+        }
+        
+        .bg-info:hover {
+            transform: translateY(0) scale(1.05);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        @keyframes infoAppear {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .bg-info h3 {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #fff;
+            font-size: 15px;
+        }
+        
+        .bg-info p {
+            font-size: 12px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        /* 游戏启动区域优化 */
+        .game-launch-section {
+            margin-top: 10px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 2px solid #5D2906;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-launch-section:hover {
+            transform: translateY(-4px);
+        }
+        
+        .game-launch-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3a9d23, #e67e22, #4fc3f7);
+        }
+        
+        .game-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .game-option {
+            background: rgba(40, 40, 40, 0.85);
+            border-radius: 15px;
+            padding: 15px;
+            width: 140px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid #5D2906;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .game-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(58, 157, 35, 0.3), rgba(230, 126, 34, 0.3));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+        
+        .game-option:hover::after {
+            opacity: 1;
+        }
+        
+        .game-option:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            border-color: #e67e22;
+        }
+        
+        .game-option i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #e67e22;
+            transition: transform 0.3s;
+        }
+        
+        .game-option:hover i {
+            transform: rotate(10deg) scale(1.2);
+        }
+        
+        .game-option h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .game-option p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .version-info {
+            margin-top: 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .java-warning {
+            background: rgba(139, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            border-left: 3px solid #8b0000;
+        }
+        
+        .launcher-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            gap: 8px;
+            color: #4fc3f7;
+            font-size: 13px;
+        }
+        
+        /* 服务器状态 */
+        .server-status {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 18px;
+            margin-top: 10px;
+            border: 2px solid #5D2906;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .server-status:hover {
+            transform: translateY(-4px);
+        }
+        
+        .server-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .server-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 12px;
+        }
+        
+        .server-item {
+            background: rgba(40, 40, 40, 0.85);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-left: 4px solid #3a9d23;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .server-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .server-item.offline {
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .server-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .server-status-badge {
+            background: #3a9d23;
+            padding: 3px 8px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .server-item:hover .server-status-badge {
+            transform: scale(1.05);
+        }
+        
+        .server-item.offline .server-status-badge {
+            background: #e53e3e;
+        }
+        
+        .server-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+        
+        .server-message {
+            margin-top: 8px;
+            font-style: italic;
+            font-size: 12px;
+            color: #4fc3f7;
+            border-top: 1px dashed rgba(79, 195, 247, 0.3);
+            padding-top: 6px;
+        }
+        
+        .server-controls {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .delete-server-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            border: 1px solid #5D2906;
+            opacity: 0;
+            font-size: 12px;
+        }
+        
+        .server-item:hover .delete-server-btn {
+            opacity: 1;
+        }
+        
+        .delete-server-btn:hover {
+            transform: scale(1.1);
+            background: rgba(200, 0, 0, 0.7);
+        }
+        
+        /* 添加服务器模态框 */
+        .server-modal .form-group input {
+            font-family: 'Courier New', monospace;
+        }
+        
+        .query-port-info {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 4px;
+            padding-left: 24px;
+        }
+        
+        /* 通知消息 */
+        .notification {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            border-left: 5px solid #3a9d23;
+            max-width: 90%;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            border-left: 5px solid #e53e3e;
+        }
+        
+        .notification i {
+            font-size: 20px;
+        }
+        
+        /* =================== */
+        /* 移动端优化 - 针对小屏幕 */
+        /* =================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                gap: 15px;
+            }
+            
+            .logo {
+                font-size: 24px;
+                margin-bottom: 15px;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .logo i {
+                font-size: 28px;
+            }
+            
+            .top-bar {
+                justify-content: center;
+                padding: 8px 0;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .theme-switch, .bg-refresh {
+                width: 38px;
+                height: 38px;
+                font-size: 16px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+            
+            .search-input {
+                padding: 14px;
+                font-size: 15px;
+            }
+            
+            .search-btn {
+                padding: 14px;
+                justify-content: center;
+                font-size: 15px;
+            }
+            
+            .engine-switcher {
+                gap: 8px;
+                margin-top: 10px;
+            }
+            
+            .engine-btn {
+                padding: 7px 12px;
+                font-size: 13px;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 15px;
+            }
+            
+            .link-item {
+                padding: 15px 10px;
+            }
+            
+            .favicon-container {
+                width: 56px;
+                height: 56px;
+                margin-bottom: 10px;
+            }
+            
+            .favicon-img {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .section-title {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .section-controls {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .add-btn, .edit-btn {
+                width: 48%;
+                justify-content: center;
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .bg-info {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                text-align: center;
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+            
+            .section-title h2, 
+            .game-launch-section h2,
+            .server-status-header h3 {
+                font-size: 16px;
+            }
+            
+            .game-options {
+                gap: 12px;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-option {
+                width: 100%;
+                max-width: 220px;
+                padding: 12px;
+            }
+            
+            .server-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-item {
+                padding: 12px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .form-group input {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+            
+            .notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                text-align: center;
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+            
+            .logo i {
+                font-size: 24px;
+            }
+            
+            .engine-switcher {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .engine-btn {
+                width: 45%;
+                text-align: center;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .game-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-option {
+                max-width: 100%;
+            }
+            
+            .server-status-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .add-btn, .edit-btn {
+                width: 100%;
+            }
+            
+            .section-controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .bg-info {
+                display: none;
+            }
+        }
+        
+        /* =================== */
+        /* 其他样式 */
+        /* =================== */
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .minecraft-text {
+            font-family: 'Press Start 2P', monospace;
+            text-transform: uppercase;
+        }
+        
+        /* 优化的明亮主题 */
+        body.light-theme {
+            background: linear-gradient(135deg, #d1f2eb, #f9f9f9);
+            color: #2c3e50;
+        }
+        
+        body.light-theme .overlay {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        body.light-theme .pixel-border,
+        body.light-theme .quicklinks-section,
+        body.light-theme .server-status,
+        body.light-theme .game-launch-section {
+            border: 3px solid #27ae60;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.97);
+        }
+        
+        body.light-theme .search-box,
+        body.light-theme .quicklinks-section,
+        body.light-theme .modal-content,
+        body.light-theme .bg-info,
+        body.light-theme .theme-switch,
+        body.light-theme .bg-refresh,
+        body.light-theme .engine-btn,
+        body.light-theme .link-item,
+        body.light-theme .form-group input,
+        body.light-theme .launch-btn {
+            background: rgba(255, 255, 255, 0.97);
+            color: #2c3e50;
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.45);
+        }
+        
+        body.light-theme .logo,
+        body.light-theme .section-title h2,
+        body.light-theme .link-title,
+        body.light-theme .bg-info h3,
+        body.light-theme .bg-info p {
+            color: #16a085;
+        }
+        
+        body.light-theme .search-input,
+        body.light-theme .form-group input {
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.92);
+        }
+        
+        body.light-theme .form-group input:focus {
+            border-color: #16a085;
+            box-shadow: 0 0 10px rgba(22, 160, 133, 0.3);
+        }
+        
+        body.light-theme .edit-link-btn,
+        body.light-theme .delete-btn {
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .edit-link-btn:hover {
+            background: #3498db;
+            color: #fff;
+        }
+        
+        body.light-theme .delete-btn:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+        
+        body.light-theme .game-option i {
+            color: #e67e22;
+        }
+        
+        body.light-theme .engine-btn {
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.92);
+        }
+        
+        body.light-theme .engine-btn.active {
+            background: #27ae60;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(39, 174, 96, 0.4);
+        }
+        
+        body.light-theme .engine-btn:hover:not(.active) {
+            background: rgba(39, 174, 96, 0.2);
+        }
+        
+        body.light-theme .search-btn,
+        body.light-theme .add-btn,
+        body.light-theme .submit-btn {
+            background: #27ae60;
+            color: white;
+            border-color: #219653;
+        }
+        
+        body.light-theme .search-btn:hover,
+        body.light-theme .add-btn:hover,
+        body.light-theme .submit-btn:hover {
+            background: #219653;
+        }
+        
+        body.light-theme .edit-btn {
+            background: #e67e22;
+            border-color: #d35400;
+            color: white;
+        }
+        
+        body.light-theme .edit-btn:hover {
+            background: #d35400;
+        }
+        
+        body.light-theme .notification {
+            background: rgba(255, 255, 255, 0.98);
+            color: #2c3e50;
+            border-left: 5px solid #27ae60;
+        }
+        
+        body.light-theme .notification.error {
+            border-left: 5px solid #e74c3c;
+        }
+        
+        body.light-theme .link-item:hover {
+            background: rgba(39, 174, 96, 0.15);
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .modal-content {
+            background: linear-gradient(135deg, #d1f2eb, #ffffff);
+            color: #2c3e50;
+            border: 3px solid #27ae60;
+        }
+        
+        body.light-theme .modal-header {
+            border-bottom: 2px solid #27ae60;
+        }
+        
+        body.light-theme .server-item {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            border-left: 4px solid #27ae60;
+        }
+        
+        body.light-theme .server-item.offline {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        body.light-theme .server-status-badge {
+            background: #27ae60;
+            color: white;
+        }
+        
+        body.light-theme .server-item.offline .server-status-badge {
+            background: #e74c3c;
+        }
+        
+        body.light-theme .server-message {
+            color: #3498db;
+            border-top: 1px dashed rgba(52, 152, 219, 0.3);
+        }
+        
+        body.light-theme .server-details {
+            color: #555;
+            font-weight: 500;
+        }
+        
+        body.light-theme .suggestions-box {
+            background: rgba(255, 255, 255, 0.98);
+            color: #2c3e50;
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .suggestion-item:hover {
+            background: rgba(39, 174, 96, 0.15);
+        }
+        
+        body.light-theme .theme-switch,
+        body.light-theme .bg-refresh {
+            background: rgba(255, 255, 255, 0.92);
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .game-launch-section {
+            background: rgba(255, 255, 255, 0.97);
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .version-info {
+            color: #7f8c8d;
+        }
+        
+        body.light-theme .favicon-container {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: #bdc3c7;
+        }
+        
+        body.light-theme .bg-info {
+            background: rgba(255, 255, 255, 0.92);
+            color: #2c3e50;
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .link-controls {
+            opacity: 0.8;
+        }
+        
+        body.light-theme .game-option {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: #27ae60;
+        }
+        
+        body.light-theme .game-option p {
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <!-- 顶部控制栏 -->
+        <div class="top-bar">
+            <div class="controls">
+                <div class="theme-switch" id="themeToggle" title="切换主题">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="bg-refresh" id="refreshBg" title="更换背景">
+                    <i class="fas fa-sync"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 搜索区域 -->
+        <section class="search-section">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span class="minecraft-text">MCstart</span>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box pixel-border">
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="输入关键词搜索...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i> 搜索
+                    </button>
+                </div>
+                <div class="suggestions-box" id="suggestionsBox"></div>
+            </div>
+            
+            <div class="engine-switcher">
+                <button class="engine-btn active" data-engine="bing">必应搜索</button>
+                <button class="engine-btn" data-engine="baidu">百度</button>
+                <button class="engine-btn" data-engine="sogou">搜狗</button>
+                <button class="engine-btn" data-engine="google">谷歌</button>
+            </div>
+        </section>
+        
+        <!-- 游戏启动区域 -->
+        <section class="game-launch-section pixel-border">
+            <h2><i class="fas fa-gamepad"></i> 启动 Minecraft 基岩版</h2>
+            <p class="version-info">选择您要启动的游戏版本</p>
+            
+            <div class="game-options">
+                <div class="game-option" id="launchBedrock">
+                    <i class="fas fa-play-circle"></i>
+                    <h3>启动游戏</h3>
+                    <p>启动已安装的基岩版</p>
+                </div>
+                
+                <div class="game-option" id="downloadGame">
+                    <i class="fas fa-download"></i>
+                    <h3>下载游戏</h3>
+                    <p>下载最新版Minecraft</p>
+                </div>
+                
+                <div class="game-option" id="realms">
+                    <i class="fas fa-crown"></i>
+                    <h3>Realms</h3>
+                    <p>访问Realms服务器</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 服务器状态 -->
+        <section class="server-status pixel-border">
+            <div class="server-status-header">
+                <h3><i class="fas fa-server"></i> 服务器状态</h3>
+                <button class="add-btn" id="addServerBtn">
+                    <i class="fas fa-plus"></i> 添加服务器
+                </button>
+            </div>
+            <div class="server-list" id="serverList">
+                <!-- 服务器状态将通过JS添加 -->
+            </div>
+        </section>
+        
+        <!-- 网址收藏区域 -->
+        <section class="quicklinks-section pixel-border">
+            <div class="section-title">
+                <h2><i class="fas fa-star"></i> 我的收藏</h2>
+                <div class="section-controls">
+                    <button class="add-btn" id="addLinkBtn">
+                        <i class="fas fa-plus"></i> 添加网址
+                    </button>
+                    <button class="edit-btn" id="editModeBtn">
+                        <i class="fas fa-edit"></i> 编辑模式
+                    </button>
+                </div>
+            </div>
+            
+            <div class="links-grid" id="linksGrid">
+                <!-- 默认网址将通过JS添加 -->
+            </div>
+        </section>
+    </div>
+    
+    <!-- 背景信息 -->
+    <div class="bg-info">
+        <h3 id="bg-title">山脉风光</h3>
+        <p id="bg-desc">壮丽的山脉与湖泊构成的美景</p>
+    </div>
+    
+    <!-- 添加/编辑网址模态框 -->
+    <div class="modal" id="linkModal">
+        <div class="modal-content pixel-border">
+            <div class="modal-header">
+                <h3 id="modalTitle">添加新网址</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-font"></i> 网站名称</label>
+                <input type="text" id="siteName" placeholder="例如：哔哩哔哩">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-link"></i> 网站网址</label>
+                <input type="text" id="siteUrl" placeholder="https://www.example.com">
+            </div>
+            
+            <button class="submit-btn" id="submitLinkBtn">
+                <span id="submitBtnText">添加网址</span>
+            </button>
+            <input type="hidden" id="editIndex" value="-1">
+        </div>
+    </div>
+    
+    <!-- 添加服务器模态框 -->
+    <div class="modal" id="serverModal">
+        <div class="modal-content pixel-border server-modal">
+            <div class="modal-header">
+                <h3 id="serverModalTitle">添加服务器</h3>
+                <button class="close-btn" id="closeServerModalBtn">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-server"></i> 服务器名称</label>
+                <input type="text" id="serverName" placeholder="例如：Hypixel">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-globe"></i> 服务器地址</label>
+                <input type="text" id="serverAddress" placeholder="例如：mc.hypixel.net">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-plug"></i> 服务器端口 (可选)</label>
+                <input type="text" id="serverPort" placeholder="默认：25565">
+                <div class="query-port-info">Query端口用于获取服务器详细信息</div>
+            </div>
+            
+            <button class="submit-btn" id="submitServerBtn">
+                <span id="submitServerBtnText">添加服务器</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 通知消息 -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">操作成功</span>
+    </div>
+
+    <script>
+        // 壁纸库 - 使用自然风光背景
+        const wallpapers = [
+            {
+                url: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08",
+                title: "山脉风光",
+                desc: "壮丽的山脉与湖泊构成的美景"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+                title: "森林日出",
+                desc: "清晨阳光透过森林的美丽景象"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+                title: "湖边日落",
+                desc: "宁静湖面上的日落美景"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1476820865390-c52aeebb9891",
+                title: "城市夜景",
+                desc: "现代都市的璀璨夜景"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+                title: "自然景观",
+                desc: "大自然的鬼斧神工"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+                title: "雪山湖泊",
+                desc: "雪山与湖泊的完美结合"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1501854140801-50d01698950b",
+                title: "田园风光",
+                desc: "宁静的乡村田园景色"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1",
+                title: "森林小径",
+                desc: "阳光穿透森林的神秘小径"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d",
+                title: "日出云海",
+                desc: "云海之上的壮丽日出"
+            }
+        ];
+        
+        // 搜索引擎配置
+        const engines = {
+            bing: {
+                url: "https://www.bing.com/search?q=",
+                name: "必应搜索"
+            },
+            baidu: {
+                url: "https://www.baidu.com/s?wd=",
+                name: "百度"
+            },
+            sogou: {
+                url: "https://www.sogou.com/web?query=",
+                name: "搜狗"
+            },
+            google: {
+                url: "https://www.google.com/search?q=",
+                name: "谷歌"
+            }
+        };
+        
+        // 搜索建议
+        const searchSuggestions = [
+            "Minecraft 模组", "红石教程", "建筑技巧", "服务器地址", 
+            "材质包下载", "皮肤制作", "命令方块", "生物群系", 
+            "下界更新", "洞穴更新", "村庄更新", "合成表"
+        ];
+        
+        // 默认服务器列表
+        const defaultServers = [
+            { name: "Hypixel", address: "mc.hypixel.net", port: 25565 },
+            { name: "Mineplex", address: "us.mineplex.com", port: 25565 },
+            { name: "The Hive", address: "play.hivemc.com", port: 25565 }
+        ];
+        
+        // DOM元素
+        const dom = {
+            themeToggle: document.getElementById('themeToggle'),
+            refreshBg: document.getElementById('refreshBg'),
+            searchInput: document.getElementById('searchInput'),
+            searchBtn: document.getElementById('searchBtn'),
+            suggestionsBox: document.getElementById('suggestionsBox'),
+            engineBtns: document.querySelectorAll('.engine-btn'),
+            linksGrid: document.getElementById('linksGrid'),
+            addLinkBtn: document.getElementById('addLinkBtn'),
+            editModeBtn: document.getElementById('editModeBtn'),
+            linkModal: document.getElementById('linkModal'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            submitLinkBtn: document.getElementById('submitLinkBtn'),
+            siteName: document.getElementById('siteName'),
+            siteUrl: document.getElementById('siteUrl'),
+            modalTitle: document.getElementById('modalTitle'),
+            submitBtnText: document.getElementById('submitBtnText'),
+            editIndex: document.getElementById('editIndex'),
+            bgTitle: document.getElementById('bg-title'),
+            bgDesc: document.getElementById('bg-desc'),
+            notification: document.getElementById('notification'),
+            notificationText: document.getElementById('notificationText'),
+            launchBedrock: document.getElementById('launchBedrock'),
+            downloadGame: document.getElementById('downloadGame'),
+            realms: document.getElementById('realms'),
+            serverList: document.getElementById('serverList'),
+            addServerBtn: document.getElementById('addServerBtn'),
+            serverModal: document.getElementById('serverModal'),
+            closeServerModalBtn: document.getElementById('closeServerModalBtn'),
+            submitServerBtn: document.getElementById('submitServerBtn'),
+            serverName: document.getElementById('serverName'),
+            serverAddress: document.getElementById('serverAddress'),
+            serverPort: document.getElementById('serverPort'),
+            serverModalTitle: document.getElementById('serverModalTitle'),
+            submitServerBtnText: document.getElementById('submitServerBtnText')
+        };
+        
+        // 状态变量
+        let currentEngine = "bing";
+        let editMode = false;
+        let currentWallpaperIndex = 0;
+        let currentVersion = "1.20";
+        let servers = [];
+        
+        // 初始化函数
+        function init() {
+            setRandomWallpaper();
+            setupEventListeners();
+            loadLinksFromLocal();
+            loadServersFromLocal();
+            showNotification("欢迎使用 MCstart 导航", "success");
+        }
+        
+        // 设置随机壁纸
+        function setRandomWallpaper() {
+            const randomIndex = Math.floor(Math.random() * wallpapers.length);
+            currentWallpaperIndex = randomIndex;
+            const wallpaper = wallpapers[randomIndex];
+            
+            document.documentElement.style.setProperty(
+                '--bg-image', 
+                `url('${wallpaper.url}?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')`
+            );
+            
+            dom.bgTitle.textContent = wallpaper.title;
+            dom.bgDesc.textContent = wallpaper.desc;
+        }
+        
+        // 设置下一张壁纸
+        function setNextWallpaper() {
+            currentWallpaperIndex = (currentWallpaperIndex + 1) % wallpapers.length;
+            const wallpaper = wallpapers[currentWallpaperIndex];
+            
+            document.documentElement.style.setProperty(
+                '--bg-image', 
+                `url('${wallpaper.url}?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')`
+            );
+            
+            dom.bgTitle.textContent = wallpaper.title;
+            dom.bgDesc.textContent = wallpaper.desc;
+        }
+        
+        // 启动基岩版
+        function launchBedrock() {
+            try {
+                // 尝试启动基岩版
+                window.open('minecraft://', '_blank');
+                showNotification("正在启动 Minecraft 基岩版...", "success");
+                
+                // 检查是否启动成功
+                setTimeout(() => {
+                    showNotification("游戏启动成功！", "success");
+                }, 2000);
+            } catch (e) {
+                // 启动失败，打开下载页面
+                window.open('https://www.minecraft.net/zh-hans/get-minecraft', '_blank');
+                showNotification("未检测到游戏，已打开下载页面", "error");
+            }
+        }
+        
+        // 查询服务器状态
+        async function queryServerStatus(server) {
+            const { name, address, port = 25565 } = server;
+            
+            try {
+                // 使用公共API查询服务器状态
+                const response = await fetch(`https://api.mcsrvstat.us/2/${address}:${port}`);
+                const data = await response.json();
+                
+                if (data.online) {
+                    return {
+                        name,
+                        address,
+                        port,
+                        online: true,
+                        players: data.players.online || 0,
+                        maxPlayers: data.players.max || 0,
+                        version: data.version || "未知",
+                        motd: data.motd?.clean || "欢迎来到Minecraft服务器"
+                    };
+                } else {
+                    return {
+                        name,
+                        address,
+                        port,
+                        online: false,
+                        players: 0,
+                        maxPlayers: 0,
+                        version: "离线",
+                        motd: "服务器离线或无法访问"
+                    };
+                }
+            } catch (e) {
+                console.error("服务器查询错误:", e);
+                return {
+                    name,
+                    address,
+                    port,
+                    online: false,
+                    players: 0,
+                    maxPlayers: 0,
+                    version: "查询错误",
+                    motd: "无法查询服务器状态"
+                };
+            }
+        }
+        
+        // 渲染服务器列表
+        async function renderServerList() {
+            dom.serverList.innerHTML = '';
+            
+            for (const server of servers) {
+                const status = await queryServerStatus(server);
+                
+                const serverElement = document.createElement('div');
+                serverElement.className = `server-item ${status.online ? '' : 'offline'}`;
+                
+                serverElement.innerHTML = `
+                    <div class="server-header">
+                        <div class="server-name">${status.name}</div>
+                        <div class="server-status-badge">${status.online ? '在线' : '离线'}</div>
+                    </div>
+                    <div class="server-details">
+                        <span>${status.address}:${status.port}</span>
+                        <span>${status.players}/${status.maxPlayers}</span>
+                    </div>
+                    <div class="server-message">${status.motd}</div>
+                    <div class="server-controls">
+                        <button class="delete-server-btn" data-address="${status.address}" data-port="${status.port}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                dom.serverList.appendChild(serverElement);
+            }
+            
+            // 添加删除服务器事件
+            document.querySelectorAll('.delete-server-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const address = btn.dataset.address;
+                    const port = parseInt(btn.dataset.port);
+                    
+                    if (confirm('确定要删除这个服务器吗？')) {
+                        deleteServer(address, port);
+                    }
+                });
+            });
+        }
+        
+        // 从本地存储加载服务器
+        function loadServersFromLocal() {
+            const savedServers = localStorage.getItem('userServers');
+            
+            if (savedServers) {
+                servers = JSON.parse(savedServers);
+            } else {
+                // 使用默认服务器
+                servers = [...defaultServers];
+                localStorage.setItem('userServers', JSON.stringify(servers));
+            }
+            
+            renderServerList();
+        }
+        
+        // 添加新服务器
+        function addNewServer() {
+            const name = dom.serverName.value.trim();
+            const address = dom.serverAddress.value.trim();
+            const port = dom.serverPort.value.trim() || "25565";
+            
+            if (!name || !address) {
+                showNotification("请填写服务器名称和地址", "error");
+                return;
+            }
+            
+            // 验证端口
+            const portNum = parseInt(port);
+            if (isNaN(portNum)) {
+                showNotification("端口必须是有效数字", "error");
+                return;
+            }
+            
+            // 检查服务器是否已存在
+            if (servers.some(s => s.address === address && s.port === portNum)) {
+                showNotification("该服务器已在列表中", "error");
+                return;
+            }
+            
+            // 添加新服务器
+            servers.push({ name, address, port: portNum });
+            localStorage.setItem('userServers', JSON.stringify(servers));
+            
+            showNotification("服务器添加成功", "success");
+            closeServerModal();
+            renderServerList();
+        }
+        
+        // 删除服务器
+        function deleteServer(address, port) {
+            servers = servers.filter(s => s.address !== address || s.port !== port);
+            localStorage.setItem('userServers', JSON.stringify(servers));
+            
+            showNotification("服务器已删除", "success");
+            renderServerList();
+        }
+        
+        // 打开服务器模态框
+        function openServerModal() {
+            dom.serverName.value = "";
+            dom.serverAddress.value = "";
+            dom.serverPort.value = "";
+            dom.serverModalTitle.textContent = "添加服务器";
+            dom.submitServerBtnText.textContent = "添加服务器";
+            dom.serverModal.style.display = 'flex';
+        }
+        
+        // 关闭服务器模态框
+        function closeServerModal() {
+            dom.serverModal.style.display = 'none';
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 主题切换
+            dom.themeToggle.addEventListener('click', toggleTheme);
+            
+            // 刷新背景
+            dom.refreshBg.addEventListener('click', setNextWallpaper);
+            
+            // 游戏启动按钮
+            dom.launchBedrock.addEventListener('click', launchBedrock);
+            dom.downloadGame.addEventListener('click', () => {
+                window.open('https://www.minecraft.net/zh-hans/get-minecraft', '_blank');
+                showNotification("正在打开下载页面...", "success");
+            });
+            dom.realms.addEventListener('click', () => {
+                window.open('https://www.minecraft.net/zh-hans/realms', '_blank');
+                showNotification("正在打开 Realms 页面...", "success");
+            });
+            
+            // 添加服务器按钮
+            dom.addServerBtn.addEventListener('click', openServerModal);
+            dom.closeServerModalBtn.addEventListener('click', closeServerModal);
+            dom.submitServerBtn.addEventListener('click', addNewServer);
+            window.addEventListener('click', function(e) {
+                if (e.target === dom.serverModal) closeServerModal();
+            });
+            
+            // 搜索引擎切换
+            dom.engineBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.dataset.engine) {
+                        switchEngine(this.dataset.engine);
+                    }
+                });
+            });
+            
+            // 搜索功能
+            dom.searchBtn.addEventListener('click', performSearch);
+            dom.searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            // 搜索建议
+            dom.searchInput.addEventListener('input', showSearchSuggestions);
+            dom.searchInput.addEventListener('focus', showSearchSuggestions);
+            
+            // 模态框功能
+            dom.addLinkBtn.addEventListener('click', () => openLinkModal());
+            dom.closeModalBtn.addEventListener('click', closeLinkModal);
+            window.addEventListener('click', function(e) {
+                if (e.target === dom.linkModal) closeLinkModal();
+            });
+            
+            // 提交链接
+            dom.submitLinkBtn.addEventListener('click', submitLink);
+            
+            // 编辑模式
+            dom.editModeBtn.addEventListener('click', toggleEditMode);
+        }
+        
+        // 切换主题
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const icon = dom.themeToggle.querySelector('i');
+            
+            if (document.body.classList.contains('light-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                showNotification("已切换至明亮主题", "success");
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                showNotification("已切换至暗黑主题", "success");
+            }
+        }
+        
+        // 切换搜索引擎
+        function switchEngine(engine) {
+            dom.engineBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.engine === engine);
+            });
+            currentEngine = engine;
+            showNotification(`已切换至${engines[engine].name}`, "success");
+        }
+        
+        // 执行搜索
+        function performSearch() {
+            const query = dom.searchInput.value.trim();
+            if (query) {
+                window.location.href = engines[currentEngine].url + encodeURIComponent(query);
+            } else {
+                showNotification("请输入搜索内容", "error");
+            }
+        }
+        
+        // 显示搜索建议
+        function showSearchSuggestions() {
+            const query = dom.searchInput.value.trim().toLowerCase();
+            if (!query) {
+                dom.suggestionsBox.style.display = 'none';
+                return;
+            }
+            
+            // 过滤匹配的建议
+            const matchedSuggestions = searchSuggestions.filter(suggestion => 
+                suggestion.toLowerCase().includes(query)
+            );
+            
+            // 显示建议框
+            if (matchedSuggestions.length > 0) {
+                dom.suggestionsBox.innerHTML = matchedSuggestions.map(suggestion => 
+                    `<div class="suggestion-item">
+                        <i class="fas fa-search"></i>
+                        <span>${suggestion}</span>
+                     </div>`
+                ).join('');
+                
+                // 添加点击事件
+                document.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        dom.searchInput.value = item.querySelector('span').textContent;
+                        dom.suggestionsBox.style.display = 'none';
+                        performSearch();
+                    });
+                });
+                
+                dom.suggestionsBox.style.display = 'block';
+            } else {
+                dom.suggestionsBox.style.display = 'none';
+            }
+        }
+        
+        // 打开链接模态框（用于添加或编辑）
+        function openLinkModal(linkIndex = -1) {
+            if (linkIndex === -1) {
+                // 添加模式
+                dom.modalTitle.textContent = "添加新网址";
+                dom.submitBtnText.textContent = "添加网址";
+                dom.siteName.value = "";
+                dom.siteUrl.value = "";
+                dom.editIndex.value = "-1";
+            } else {
+                // 编辑模式
+                const links = JSON.parse(localStorage.getItem('userLinks') || '[]');
+                const link = links[linkIndex];
+                if (link) {
+                    dom.modalTitle.textContent = "编辑网址";
+                    dom.submitBtnText.textContent = "保存更改";
+                    dom.siteName.value = link.title;
+                    // 存储时包含协议，但显示时移除协议前缀
+                    dom.siteUrl.value = link.url.replace(/^https?:\/\//, '');
+                    dom.editIndex.value = linkIndex;
+                }
+            }
+            dom.linkModal.style.display = 'flex';
+        }
+        
+        // 关闭链接模态框
+        function closeLinkModal() {
+            dom.linkModal.style.display = 'none';
+        }
+        
+        // 提交链接（添加或编辑）
+        function submitLink() {
+            const name = dom.siteName.value.trim();
+            let url = dom.siteUrl.value.trim();
+            const editIndex = parseInt(dom.editIndex.value);
+            
+            if (!name || !url) {
+                showNotification("请填写网站名称和网址", "error");
+                return;
+            }
+            
+            // 确保URL有协议
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            // 添加或更新链接
+            const links = JSON.parse(localStorage.getItem('userLinks') || '[]');
+            
+            if (editIndex === -1) {
+                // 添加新链接
+                links.push({ title: name, url: url });
+                showNotification("网址添加成功", "success");
+            } else {
+                // 更新现有链接
+                links[editIndex] = { title: name, url: url };
+                showNotification("网址更新成功", "success");
+            }
+            
+            // 保存并刷新
+            localStorage.setItem('userLinks', JSON.stringify(links));
+            loadLinksFromLocal();
+            closeLinkModal();
+        }
+        
+        // 获取网站favicon
+        function getFaviconUrl(url) {
+            try {
+                const domain = new URL(url).hostname;
+                return `https://${domain}/favicon.ico`;
+            } catch (e) {
+                // 使用默认SVG图标
+                return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmZmZmZmIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptLTggMThjLTMuMzEgMC02LTIuNjktNi02czIuNjktNiA2LTYgNiAyLjY5IDYgNi0yLjY5IDYtNiA2eiIvPjxwYXRoIGQ9Ik04IDE2bDItM2wxIDRsMy00bDMgNGgxNCIvPjwvc3ZnPg==';
+            }
+        }
+        
+        // 创建链接元素
+        function createLinkElement(linkData, index) {
+            const { title, url } = linkData;
+            const fullUrl = url.startsWith('http') ? url : 'https://' + url;
+            
+            const newLink = document.createElement('a');
+            newLink.className = 'link-item';
+            newLink.href = fullUrl;
+            newLink.target = '_blank';
+            newLink.dataset.title = title;
+            newLink.dataset.url = url;
+            newLink.dataset.index = index;
+            newLink.draggable = true;
+            
+            // 编辑模式下阻止点击跳转
+            if (editMode) {
+                newLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openLinkModal(index);
+                });
+            }
+            
+            // 创建favicon容器
+            const faviconContainer = document.createElement('div');
+            faviconContainer.className = 'favicon-container';
+            
+            // 创建favicon图片
+            const faviconImg = document.createElement('img');
+            faviconImg.className = 'favicon-img';
+            faviconImg.src = getFaviconUrl(fullUrl);
+            faviconImg.alt = title + ' icon';
+            
+            // 处理图标加载失败
+            faviconImg.onerror = function() {
+                this.onerror = null;
+                this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI4IiBmaWxsPSIjZmZmZmZmIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA6LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptLTggMThjLTMuMzEgMC02LTIuNjktNi02czIuNjktNiA2LTYgNiAyLjY5IDYgNi0yLjY5IDYtNiA2eiIvPjxwYXRoIGQ9Ik04IDE2bDItM2wxIDRsMy00bDMgNGgxNCIvPjwvc3ZnPg==';
+            };
+            
+            // 创建标题
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'link-title';
+            titleDiv.textContent = title;
+            
+            // 创建控制按钮
+            const controlsDiv = document.createElement('div');
+            controlsDiv.className = 'link-controls';
+            
+            // 编辑按钮
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-link-btn';
+            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openLinkModal(index);
+            };
+            
+            // 删除按钮（带确认）
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+            deleteBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('确定要删除这个网址吗？')) {
+                    deleteLink(index);
+                }
+            };
+            
+            // 组合元素
+            controlsDiv.appendChild(editBtn);
+            controlsDiv.appendChild(deleteBtn);
+            faviconContainer.appendChild(faviconImg);
+            newLink.appendChild(faviconContainer);
+            newLink.appendChild(titleDiv);
+            newLink.appendChild(controlsDiv);
+            
+            return newLink;
+        }
+        
+        // 删除链接
+        function deleteLink(index) {
+            const links = JSON.parse(localStorage.getItem('userLinks') || '[]');
+            if (index >= 0 && index < links.length) {
+                links.splice(index, 1);
+                localStorage.setItem('userLinks', JSON.stringify(links));
+                loadLinksFromLocal();
+                showNotification("网址已删除", "success");
+            }
+        }
+        
+        // 从本地存储加载网址
+        function loadLinksFromLocal() {
+            dom.linksGrid.innerHTML = '';
+            const savedLinks = localStorage.getItem('userLinks');
+            
+            if (savedLinks) {
+                const links = JSON.parse(savedLinks);
+                
+                links.forEach((link, index) => {
+                    const newLink = createLinkElement(link, index);
+                    dom.linksGrid.appendChild(newLink);
+                });
+            } else {
+                // 默认网站（包含完整协议）
+                const defaultSites = [
+                    { title: "Minecraft官网", url: "https://www.minecraft.net" },
+                    { title: "MC中国版", url: "https://mc.163.com" },
+                    { title: "Minecraft Wiki", url: "https://minecraft.wiki" },                                         
+                    { title: "MC百科", url: "https://www.mcmod.cn" },
+                    { title: "Minecraft吧", url: "https://tieba.baidu.com/f?kw=minecraft" },
+                    { title: "mineBBS", url: "https://www.minebbs.com" },
+                    { title: "苦力怕论坛", url: "https://klpbbs.com/" },
+                    { title: "MC中文站", url: "https://www.minecraftzw.com/" },
+                    { title: "GitHub", url: "https://github.com" },
+                    { title: "MC导航", url: "https://www.mcnav.net/" }
+                ];
+                
+                defaultSites.forEach((site, index) => {
+                    const newLink = createLinkElement(site, index);
+                    dom.linksGrid.appendChild(newLink);
+                });
+                
+                localStorage.setItem('userLinks', JSON.stringify(defaultSites));
+            }
+            
+            // 设置拖拽功能
+            setupDragAndDrop();
+        }
+        
+        // 设置拖拽功能
+        function setupDragAndDrop() {
+            const links = document.querySelectorAll('.link-item');
+            
+            links.forEach(link => {
+                link.addEventListener('dragstart', handleDragStart);
+                link.addEventListener('dragover', handleDragOver);
+                link.addEventListener('dragenter', handleDragEnter);
+                link.addEventListener('dragleave', handleDragLeave);
+                link.addEventListener('drop', handleDrop);
+                link.addEventListener('dragend', handleDragEnd);
+            });
+        }
+        
+        // 拖拽处理函数
+        let dragSrcEl = null;
+        
+        function handleDragStart(e) {
+            dragSrcEl = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+        
+        function handleDragEnter(e) {
+            this.classList.add('over');
+        }
+        
+        function handleDragLeave(e) {
+            this.classList.remove('over');
+        }
+        
+        function handleDrop(e) {
+            e.stopPropagation();
+            
+            if (dragSrcEl !== this) {
+                dom.linksGrid.insertBefore(dragSrcEl, this);
+                saveLinkOrder();
+            }
+            
+            return false;
+        }
+        
+        function handleDragEnd(e) {
+            const items = document.querySelectorAll('.link-item');
+            items.forEach(item => {
+                item.classList.remove('over');
+                item.classList.remove('dragging');
+            });
+        }
+        
+        // 保存链接顺序
+        function saveLinkOrder() {
+            const links = [];
+            document.querySelectorAll('.link-item').forEach(link => {
+                links.push({
+                    title: link.dataset.title,
+                    url: link.dataset.url
+                });
+            });
+            
+            localStorage.setItem('userLinks', JSON.stringify(links));
+        }
+        
+        // 切换编辑模式
+        function toggleEditMode() {
+            editMode = !editMode;
+            dom.editModeBtn.classList.toggle('active', editMode);
+            
+            // 重新加载链接以更新点击行为
+            loadLinksFromLocal();
+            
+            if (editMode) {
+                document.querySelectorAll('.link-controls').forEach(control => {
+                    control.style.opacity = '1';
+                });
+                showNotification("编辑模式已启用", "success");
+            } else {
+                document.querySelectorAll('.link-controls').forEach(control => {
+                    control.style.opacity = '';
+                });
+                showNotification("编辑模式已关闭", "success");
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message, type) {
+            dom.notification.className = `notification ${type}`;
+            dom.notificationText.textContent = message;
+            dom.notification.classList.add('show');
+            
+            setTimeout(() => {
+                dom.notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 初始化应用
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
