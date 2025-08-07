@@ -129,6 +129,7 @@
             text-align: center;
             padding: 15px 0;
             animation: fadeIn 0.8s ease-out;
+            position: relative;
         }
         
         @keyframes fadeIn {
@@ -178,6 +179,66 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.1) rotate(5deg); }
             100% { transform: scale(1); }
+        }
+        
+        /* 闪烁标语样式 - 已修改为黄色、更大尺寸并倾斜15度 */
+        .splash-text {
+            position: absolute;
+            top: -15px;
+            right: 0;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px; /* 增大字体大小 */
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: #FFFF00; /* 改为黄色 */
+            text-shadow: 
+                3px 3px 0 #000, 
+                -3px -3px 0 #000, 
+                3px -3px 0 #000, 
+                -3px 3px 0 #000,
+                0 0 12px rgba(255, 255, 0, 0.8); /* 添加黄色发光效果 */
+            animation: splashPulse 3s infinite;
+            opacity: 0.9;
+            z-index: 20;
+            transform: rotate(15deg); /* 倾斜15度 */
+            transform-origin: right top; /* 以右上角为旋转点 */
+            padding: 5px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            pointer-events: auto;
+        }
+        
+        @keyframes splashPulse {
+            0% { 
+                opacity: 0.9; 
+                transform: rotate(15deg) scale(1); 
+                text-shadow: 
+                    3px 3px 0 #000, 
+                    -3px -3px 0 #000, 
+                    3px -3px 0 #000, 
+                    -3px 3px 0 #000,
+                    0 0 12px rgba(255, 255, 0, 0.8);
+            }
+            50% { 
+                opacity: 1; 
+                transform: rotate(15deg) scale(1.1); 
+                text-shadow: 
+                    4px 4px 0 #000, 
+                    -4px -4px 0 #000, 
+                    4px -4px 0 #000, 
+                    -4px 4px 0 #000,
+                    0 0 20px rgba(255, 255, 0, 1);
+            }
+            100% { 
+                opacity: 0.9; 
+                transform: rotate(15deg) scale(1); 
+                text-shadow: 
+                    3px 3px 0 #000, 
+                    -3px -3px 0 #000, 
+                    3px -3px 0 #000, 
+                    -3px 3px 0 #000,
+                    0 0 12px rgba(255, 255, 0, 0.8);
+            }
         }
         
         .search-container {
@@ -1054,6 +1115,15 @@
                 font-size: 28px;
             }
             
+            /* 移动端标语调整 */
+            .splash-text {
+                font-size: 18px; /* 移动端也增大 */
+                top: -12px;
+                right: 0;
+                transform: rotate(15deg);
+                padding: 4px 10px;
+            }
+            
             .top-bar {
                 justify-content: center;
                 padding: 8px 0;
@@ -1201,6 +1271,13 @@
             
             .logo i {
                 font-size: 24px;
+            }
+            
+            .splash-text {
+                font-size: 16px;
+                top: -10px;
+                transform: rotate(15deg);
+                padding: 3px 8px;
             }
             
             .engine-switcher {
@@ -1520,6 +1597,8 @@
             <div class="logo">
                 <i class="fas fa-cube"></i>
                 <span class="minecraft-text">MCstart</span>
+                <!-- 闪烁标语容器 -->
+                <div class="splash-text" id="splashText"></div>
             </div>
             
             <div class="search-container">
@@ -1726,6 +1805,27 @@
             }
         ];
         
+        // 闪烁标语数组 - 包含经典的Minecraft标语
+        const splashTexts = [
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "魔理莎偷走了重要的东西！", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "更多标语？联系作者！",
+            "制作药水!", "作者的Q:3350362970", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "mojang变ojng", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "作者的Q:3350362970",
+            "Bad Apple!", "魔理沙ちゃん最高!", "无节操红白巫女大好。", "工作工作，好忙好忙",            
+            "By WuDong_awa!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "你的显卡在哭泣！", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "传奇Technoblade!", "洞穴探索!",
+            "丛林冒险!", "多喝水!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "正在加载....", "冒险开始!"
+        ];
+        
         // 搜索引擎配置
         const engines = {
             bing: {
@@ -1810,7 +1910,8 @@
             serverPort: document.getElementById('serverPort'),
             serverModalTitle: document.getElementById('serverModalTitle'),
             submitServerBtnText: document.getElementById('submitServerBtnText'),
-            debugStatus: document.getElementById('debugStatus')
+            debugStatus: document.getElementById('debugStatus'),
+            splashText: document.getElementById('splashText')
         };
         
         // 状态变量
@@ -1831,11 +1932,22 @@
                 loadData();
                 showNotification("欢迎使用 MCstart 导航", "success");
                 dom.debugStatus.textContent = "初始化完成";
+                
+                // 设置随机闪烁标语
+                setRandomSplashText();
             } catch (e) {
                 console.error("初始化错误:", e);
                 dom.debugStatus.textContent = "初始化错误";
                 showNotification("初始化失败: " + e.message, "error");
             }
+        }
+        
+        // 设置随机闪烁标语
+        function setRandomSplashText() {
+            const randomIndex = Math.floor(Math.random() * splashTexts.length);
+            const splash = splashTexts[randomIndex];
+            
+            dom.splashText.textContent = splash;
         }
         
         // 加载主题设置
@@ -2129,6 +2241,9 @@
                 
                 // 编辑模式
                 dom.editModeBtn.addEventListener('click', toggleEditMode);
+                
+                // 点击标语刷新
+                dom.splashText.addEventListener('click', setRandomSplashText);
                 
                 dom.debugStatus.textContent = "事件监听器已绑定";
             } catch (e) {
