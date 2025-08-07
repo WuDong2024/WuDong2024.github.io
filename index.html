@@ -655,7 +655,7 @@
         }
         
         .form-group input::placeholder {
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
         }
         
         .submit-btn {
@@ -1824,6 +1824,8 @@
         // 初始化函数
         function init() {
             try {
+                // 从本地存储加载数据
+                loadTheme();
                 setRandomWallpaper();
                 setupEventListeners();
                 loadData();
@@ -1833,6 +1835,16 @@
                 console.error("初始化错误:", e);
                 dom.debugStatus.textContent = "初始化错误";
                 showNotification("初始化失败: " + e.message, "error");
+            }
+        }
+        
+        // 加载主题设置
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('mcstart-theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                const icon = dom.themeToggle.querySelector('i');
+                icon.classList.replace('fa-moon', 'fa-sun');
             }
         }
         
@@ -1868,12 +1880,24 @@
         // 加载数据
         function loadData() {
             // 加载服务器
-            servers = [...defaultServers];
+            const savedServers = localStorage.getItem('mcstart-servers');
+            servers = savedServers ? JSON.parse(savedServers) : [...defaultServers];
             renderServerList();
             
             // 加载链接
-            links = [...defaultLinks];
+            const savedLinks = localStorage.getItem('mcstart-links');
+            links = savedLinks ? JSON.parse(savedLinks) : [...defaultLinks];
             renderLinks();
+        }
+        
+        // 保存服务器到本地存储
+        function saveServersToStorage() {
+            localStorage.setItem('mcstart-servers', JSON.stringify(servers));
+        }
+        
+        // 保存链接到本地存储
+        function saveLinksToStorage() {
+            localStorage.setItem('mcstart-links', JSON.stringify(links));
         }
         
         // 启动基岩版
@@ -2012,6 +2036,9 @@
             // 添加新服务器
             servers.push({ name, address, port: portNum });
             
+            // 保存到本地存储
+            saveServersToStorage();
+            
             showNotification("服务器添加成功", "success");
             closeServerModal();
             renderServerList();
@@ -2020,6 +2047,9 @@
         // 删除服务器
         function deleteServer(address, port) {
             servers = servers.filter(s => s.address !== address || s.port !== port);
+            
+            // 保存到本地存储
+            saveServersToStorage();
             
             showNotification("服务器已删除", "success");
             renderServerList();
@@ -2115,9 +2145,13 @@
             
             if (document.body.classList.contains('light-theme')) {
                 icon.classList.replace('fa-moon', 'fa-sun');
+                // 保存主题设置到本地存储
+                localStorage.setItem('mcstart-theme', 'light');
                 showNotification("已切换至明亮主题", "success");
             } else {
                 icon.classList.replace('fa-sun', 'fa-moon');
+                // 保存主题设置到本地存储
+                localStorage.setItem('mcstart-theme', 'dark');
                 showNotification("已切换至暗黑主题", "success");
             }
         }
@@ -2233,6 +2267,9 @@
                 showNotification("网址更新成功", "success");
             }
             
+            // 保存到本地存储
+            saveLinksToStorage();
+            
             // 保存并刷新
             renderLinks();
             closeLinkModal();
@@ -2333,6 +2370,10 @@
         function deleteLink(index) {
             if (index >= 0 && index < links.length) {
                 links.splice(index, 1);
+                
+                // 保存到本地存储
+                saveLinksToStorage();
+                
                 renderLinks();
                 showNotification("网址已删除", "success");
             }
@@ -2417,6 +2458,7 @@
             });
             
             links = newLinks;
+            saveLinksToStorage();
         }
         
         // 切换编辑模式
