@@ -1092,6 +1092,212 @@
             z-index: 10000;
         }
         
+        /* 新闻区域样式 */
+        .news-section {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 25px;
+            border: 2px solid #5D2906;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .news-section:hover {
+            transform: translateY(-4px);
+        }
+        
+        .news-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3a9d23, #8B4513, #3a9d23);
+        }
+        
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .news-header h2 {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-family: 'Press Start 2P', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .news-categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            background: rgba(40, 40, 40, 0.8);
+            color: white;
+            border: 2px solid #5D2906;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            font-weight: bold;
+        }
+        
+        .category-btn.active {
+            background: #3a9d23;
+            box-shadow: 0 0 12px rgba(58, 157, 35, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .category-btn:hover:not(.active) {
+            background: rgba(58, 157, 35, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .news-container {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
+        }
+        
+        .news-list {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+        
+        .news-item {
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+            background: rgba(40, 40, 40, 0.85);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #5D2906;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        
+        .news-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border-color: #3a9d23;
+        }
+        
+        .news-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .news-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 15px;
+        }
+        
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .news-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-excerpt {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 12px;
+            flex: 1;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+        
+        .news-source {
+            background: rgba(58, 157, 35, 0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        .news-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .news-nav-btn {
+            background: rgba(30, 30, 30, 0.8);
+            color: white;
+            border: 2px solid #5D2906;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .news-nav-btn:hover {
+            background: rgba(58, 157, 35, 0.5);
+            transform: scale(1.1);
+        }
+        
+        .news-indicators {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .news-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .news-indicator.active {
+            background: #3a9d23;
+            transform: scale(1.2);
+        }
+        
         /* =================== */
         /* 移动端优化 - 针对小屏幕 */
         /* =================== */
@@ -1262,6 +1468,26 @@
                 text-align: center;
                 padding: 10px 15px;
             }
+            
+            /* 新闻区域移动端优化 */
+            .news-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .news-categories {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .news-container {
+                height: 380px;
+            }
+            
+            .news-image {
+                height: 160px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1329,6 +1555,15 @@
                 height: 30px;
                 font-size: 16px;
             }
+            
+            /* 新闻区域移动端优化 */
+            .news-container {
+                height: 420px;
+            }
+            
+            .news-image {
+                height: 140px;
+            }
         }
         
         /* =================== */
@@ -1368,7 +1603,8 @@
         body.light-theme .pixel-border,
         body.light-theme .quicklinks-section,
         body.light-theme .server-status,
-        body.light-theme .game-launch-section {
+        body.light-theme .game-launch-section,
+        body.light-theme .news-section {
             border: 3px solid #27ae60;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             background: rgba(255, 255, 255, 0.97);
@@ -1383,7 +1619,9 @@
         body.light-theme .engine-btn,
         body.light-theme .link-item,
         body.light-theme .form-group input,
-        body.light-theme .launch-btn {
+        body.light-theme .launch-btn,
+        body.light-theme .news-item,
+        body.light-theme .category-btn {
             background: rgba(255, 255, 255, 0.97);
             color: #2c3e50;
             border-color: #27ae60;
@@ -1575,6 +1813,32 @@
         body.light-theme .game-option p {
             color: #7f8c8d;
         }
+        
+        body.light-theme .news-item {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+        }
+        
+        body.light-theme .news-overlay {
+            background: linear-gradient(transparent, rgba(0,0,0,0.4));
+        }
+        
+        body.light-theme .news-title {
+            color: #2c3e50;
+        }
+        
+        body.light-theme .news-excerpt {
+            color: #555;
+        }
+        
+        body.light-theme .news-meta {
+            color: #7f8c8d;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        body.light-theme .news-source {
+            background: rgba(39, 174, 96, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -1643,6 +1907,37 @@
                     <h3>Realms</h3>
                     <p>访问Realms服务器</p>
                 </div>
+            </div>
+        </section>
+        
+        <!-- 新闻区域 -->
+        <section class="news-section pixel-border">
+            <div class="news-header">
+                <h2><i class="fas fa-newspaper"></i>MCStart新闻快讯</h2>
+                <div class="news-categories">
+                    <button class="category-btn active" data-category="all">全部</button>
+                    <button class="category-btn" data-category="update">版本更新</button>
+                    <button class="category-btn" data-category="event">活动</button>
+                    <button class="category-btn" data-category="community">社区</button>
+                </div>
+            </div>
+            
+            <div class="news-container">
+                <div class="news-list" id="newsList">
+                    <!-- 新闻条目将通过JS添加 -->
+                </div>
+            </div>
+            
+            <div class="news-controls">
+                <button class="news-nav-btn" id="prevNews">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="news-indicators" id="newsIndicators">
+                    <!-- 指示器将通过JS添加 -->
+                </div>
+                <button class="news-nav-btn" id="nextNews">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </section>
         
@@ -1813,7 +2108,7 @@
             "建造城堡!", "挖掘钻石!", "驯服狼群!", "更多标语？联系作者！",
             "制作药水!", "作者的Q:3350362970", "寻找要塞!", "探索海底神殿!",
             "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
-            "像素艺术!", "红石科技!", "mojang变ojng", "洞穴探索!",
+            "像素艺术!", "红石科技!", "mojang?ojng!", "洞穴探索!",
             "丛林冒险!", "沙漠神殿!", "雪地村庄!", "作者的Q:3350362970",
             "Bad Apple!", "魔理沙ちゃん最高!", "无节操红白巫女大好。", "工作工作，好忙好忙",            
             "By WuDong_awa!", "挖矿时间!", "小心苦力怕!", "红石大师!",
@@ -1823,7 +2118,61 @@
             "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
             "像素艺术!", "红石科技!", "传奇Technoblade!", "洞穴探索!",
             "丛林冒险!", "多喝水!", "雪地村庄!", "极限模式!",
-            "技术玩家!", "生存专家!", "正在加载....", "冒险开始!"
+            "技术玩家!", "生存专家!", "正在加载....", "冒险开始!" ,
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!" ,
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!",
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "推荐你玩mc1.18!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!",
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "推荐你玩mc1.16.5!", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "推荐你玩mc1.7.10!", "推荐你玩mc1.14.2!", "玩得开心!",
+            "像素艺术!", "红石科技!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!",
+            "MCstart!", "推荐你玩mc1.21.1!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "推荐你玩mc1.12.1!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!",
+            "MCstart!", "祝你好运!", "探索无限世界!", "创造你的梦想!",
+            "方块世界!", "挖矿时间!", "小心苦力怕!", "红石大师!",
+            "生存还是创造?", "附魔时间!", "探索下界!", "末地冒险!",
+            "建造城堡!", "挖掘钻石!", "驯服狼群!", "钓鱼时间!",
+            "制作药水!", "击败末影龙!", "寻找要塞!", "探索海底神殿!",
+            "建造农场!", "自动化一切!", "挑战极限!", "玩得开心!",
+            "像素艺术!", "红石科技!", "建筑大师!", "洞穴探索!",
+            "丛林冒险!", "沙漠神殿!", "雪地村庄!", "极限模式!",
+            "技术玩家!", "生存专家!", "建筑灵感!", "冒险开始!"
         ];
         
         // 搜索引擎配置
@@ -1874,6 +2223,30 @@
             { title: "MC导航", url: "https://www.mcnav.net/" }
         ];
         
+        // Minecraft新闻数据
+        const minecraftNews = [
+            {
+                id: 1,
+                title: "Minecraft快照 25w32a 发布,铜质家族再添新成员!",
+                excerpt: 'Minecraft 新闻快报：铜质家族扩展与关键修复在最新的 Minecraft 更新中，铜质方块家族迎来了重要扩展！玩家现在可以制作 铜火把（由铜粒、煤炭和木棒合成）、铜栅栏（由6个铜锭合成）以及 铜链（由2铜粒+1铜锭合成）和 铜灯笼（由8铜粒+1铜火把合成）。这些新方块继承了铜的特性，能够 氧化、被上蜡、除蜡或除锈。特别值得注意的是，铜灯笼的氧化程度只会改变外观，不会影响其发出的亮度。',
+                image: "https://zh.minecraft.wiki/images/thumb/25w32a.png/560px-25w32a.png?758e4",
+                date: "2023-06-07",
+                source: "官方更新(java)",
+                category: "update",
+                link: "https://www.minecraft.net/zh-hans/article/minecraft-snapshot-25w32a"
+            },
+            {
+                id: 2,
+                title: "1.21.100 基岩版更新,铜傀儡上线！",
+                excerpt: "增加智能整理工——铜傀儡和铜箱！新增实用铜工具和盔甲，修复大量BUG，优化游戏体验，末地终于能设重生点了！",
+                image: "https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/screenshots/1_21_100_VV_1170x500.jpg",
+                date: "2023-09-18",
+                source: "官方更新(基岩)",
+                category: "update",
+                link: "https://www.minecraft.net/zh-hans/article/minecraft-1-21-100-bedrock-changelog"
+            },   
+        ];
+        
         // DOM元素
         const dom = {
             themeToggle: document.getElementById('themeToggle'),
@@ -1911,7 +2284,12 @@
             serverModalTitle: document.getElementById('serverModalTitle'),
             submitServerBtnText: document.getElementById('submitServerBtnText'),
             debugStatus: document.getElementById('debugStatus'),
-            splashText: document.getElementById('splashText')
+            splashText: document.getElementById('splashText'),
+            newsList: document.getElementById('newsList'),
+            newsIndicators: document.getElementById('newsIndicators'),
+            prevNews: document.getElementById('prevNews'),
+            nextNews: document.getElementById('nextNews'),
+            categoryBtns: document.querySelectorAll('.category-btn')
         };
         
         // 状态变量
@@ -1921,6 +2299,8 @@
         let currentVersion = "1.20";
         let servers = [];
         let links = [];
+        let currentNewsIndex = 0;
+        let currentCategory = "all";
         
         // 初始化函数
         function init() {
@@ -1935,11 +2315,90 @@
                 
                 // 设置随机闪烁标语
                 setRandomSplashText();
+                
+                // 渲染新闻
+                renderNews();
             } catch (e) {
                 console.error("初始化错误:", e);
                 dom.debugStatus.textContent = "初始化错误";
                 showNotification("初始化失败: " + e.message, "error");
             }
+        }
+        
+        // 渲染新闻
+        function renderNews() {
+            dom.newsList.innerHTML = '';
+            dom.newsIndicators.innerHTML = '';
+            
+            // 过滤当前类别的新闻
+            const filteredNews = currentCategory === "all" 
+                ? minecraftNews 
+                : minecraftNews.filter(news => news.category === currentCategory);
+            
+            // 如果没有新闻
+            if (filteredNews.length === 0) {
+                dom.newsList.innerHTML = `
+                    <div class="news-item" style="justify-content: center; align-items: center; text-align: center;">
+                        <div class="news-content">
+                            <h3 class="news-title">暂无新闻</h3>
+                            <p class="news-excerpt">当前分类下没有新闻内容</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 添加新闻条目
+            filteredNews.forEach((news, index) => {
+                const newsItem = document.createElement('a');
+                newsItem.className = 'news-item';
+                newsItem.href = news.link;
+                newsItem.target = '_blank';
+                
+                newsItem.innerHTML = `
+                    <div class="news-image" style="background-image: url('${news.image}')">
+                        <div class="news-overlay">
+                            <h3 class="news-title">${news.title}</h3>
+                        </div>
+                    </div>
+                    <div class="news-content">
+                        <p class="news-excerpt">${news.excerpt}</p>
+                        <div class="news-meta">
+                            <span class="news-date">${news.date}</span>
+                            <span class="news-source">${news.source}</span>
+                        </div>
+                    </div>
+                `;
+                
+                dom.newsList.appendChild(newsItem);
+                
+                // 添加指示器
+                const indicator = document.createElement('div');
+                indicator.className = `news-indicator ${index === currentNewsIndex ? 'active' : ''}`;
+                indicator.dataset.index = index;
+                dom.newsIndicators.appendChild(indicator);
+            });
+            
+            // 设置新闻位置
+            dom.newsList.style.transform = `translateX(-${currentNewsIndex * 100}%)`;
+        }
+        
+        // 切换到特定新闻
+        function goToNews(index) {
+            const filteredNews = currentCategory === "all" 
+                ? minecraftNews 
+                : minecraftNews.filter(news => news.category === currentCategory);
+            
+            if (index < 0) index = filteredNews.length - 1;
+            if (index >= filteredNews.length) index = 0;
+            
+            currentNewsIndex = index;
+            dom.newsList.style.transform = `translateX(-${index * 100}%)`;
+            
+            // 更新指示器状态
+            document.querySelectorAll('.news-indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
         }
         
         // 设置随机闪烁标语
@@ -2244,6 +2703,45 @@
                 
                 // 点击标语刷新
                 dom.splashText.addEventListener('click', setRandomSplashText);
+                
+                // 新闻导航
+                dom.prevNews.addEventListener('click', () => goToNews(currentNewsIndex - 1));
+                dom.nextNews.addEventListener('click', () => goToNews(currentNewsIndex + 1));
+                
+                // 新闻分类切换
+                dom.categoryBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 更新活动按钮
+                        dom.categoryBtns.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // 更新当前分类
+                        currentCategory = this.dataset.category;
+                        currentNewsIndex = 0;
+                        
+                        // 重新渲染新闻
+                        renderNews();
+                    });
+                });
+                
+                // 新闻指示器点击
+                dom.newsIndicators.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('news-indicator')) {
+                        const index = parseInt(e.target.dataset.index);
+                        goToNews(index);
+                    }
+                });
+                
+                // 自动轮播新闻
+                setInterval(() => {
+                    const filteredNews = currentCategory === "all" 
+                        ? minecraftNews 
+                        : minecraftNews.filter(news => news.category === currentCategory);
+                    
+                    if (filteredNews.length > 0) {
+                        goToNews((currentNewsIndex + 1) % filteredNews.length);
+                    }
+                }, 7000);
                 
                 dom.debugStatus.textContent = "事件监听器已绑定";
             } catch (e) {
